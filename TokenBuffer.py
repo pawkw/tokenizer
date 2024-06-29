@@ -38,11 +38,11 @@ class TokenBuffer:
         while True:
             if (self.skip_white_space and self.expect_type('WHITE_SPACE') or \
             self.skip_EOF and self.expect_type('EOF')) and \
-            not self.is_end():
+            not self.out_of_tokens():
                 self.consume()
                 continue
             break
-        return None if self.is_end() else self.lines[self.line][self.column]
+        return None if self.out_of_tokens() else self.lines[self.line][self.column]
 
     def expect_value(self, expected_sting: str, lower: bool = False):
         return self.peek().value.tolower() == expected_sting if lower else self.peek().value == expected_sting
@@ -60,11 +60,11 @@ class TokenBuffer:
     def backtrack(self):
         pass
 
-    def is_end(self):
+    def out_of_tokens(self):
         return self.line > len(self.lines)
 
     def consume_line(self):
-        if self.is_end():
+        if self.out_of_tokens():
             raise IndexError("Attempt to consume line beyond end of program.")
         self.line += 1
         self.column = 0
