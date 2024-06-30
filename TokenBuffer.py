@@ -1,5 +1,5 @@
 from typing import List, Dict
-from tokenizer import tokenize, Token
+from tokenizer.tokenizer import tokenize, Token
 import re
 
 class TokenBuffer:
@@ -44,15 +44,31 @@ class TokenBuffer:
     def get_position(self):
         return None if self.out_of_tokens() else self.file_list[self.file_index], self.line + 1, self.column
 
+    # def peek(self):
+    #     while True:
+    #         if not self.out_of_tokens():
+    #             if (self.configuration['skip_white_space'] and self.expect_type('WHITE_SPACE') or \
+    #                 self.configuration['skip_EOF'] and self.expect_type('EOF')):
+    #                 self.consume()
+    #                 continue
+    #         break
+    #     return None if self.out_of_tokens() else self.tokens[self.line][self.column]
+
     def peek(self):
-        while True:
-            if not self.out_of_tokens():
-                if (self.configuration['skip_white_space'] and self.expect_type('WHITE_SPACE') or \
-                    self.configuration['skip_EOF'] and self.expect_type('EOF')):
-                    self.consume()
-                    continue
-            break
-        return None if self.out_of_tokens() else self.tokens[self.line][self.column]
+        def skip_next() -> bool:
+            conf = self.configuration
+            return (
+                (conf['skip_white_space'] and self.expect_type('WHITE_SPACE'))
+                or (conf['skip_EOF'] and self.expect_type('EOF'))
+            )
+        
+        while not self.out_of_tokens() and skip_next():
+            self.consume()
+        
+        return (
+            None if self.out_of_tokens()
+            else self.tokens[self.line][self.column]
+        )
 
     def expect_value(self, expected_sting: str, lower: bool = False):
         return self.tokens[self.line][self.column].value.tolower() == expected_sting if lower else self.tokens[self.line][self.column].value == expected_sting
