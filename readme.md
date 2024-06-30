@@ -8,7 +8,7 @@ The tokenizer automatically provides 'wHITE_SPACE' and 'UNKNOWN'. White space is
 
 Token_Buffer.config offers access to tokenizing flags:
 - skip_white_space: peek will not return whitespace.
-- include_EOF: The end of file is marked for the sake of tracking position. The setting skip_EOF can be set to False to include them in the token stream. This is handy for files that have ignored preamble.
+- skip_EOF: The end of file is marked internally for the sake of tracking position. The setting skip_EOF can be set to False to include these tokens in the token stream. This is handy for files that have ignored preamble.
 
 Example program:
 ```python
@@ -28,7 +28,7 @@ patterns = {
     "DIVIDE": r"\\",
     "EXPONENT": r"\^",
     "TETRATION": r"\^\^",
-    "IDENTIFIER": r"[\w_],
+    "IDENTIFIER": r"[\w_]+",
     "OPEN_PAREN": r"\(",
     "CLOSE_PAREN": r"\)",
 }

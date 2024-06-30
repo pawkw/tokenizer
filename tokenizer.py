@@ -12,6 +12,7 @@ class Token:
 
 def tokenize(input_string: str, pattern: re.Pattern) -> List[Token]:
     result = []
+    input_string = input_string.rstrip('\n')
     matches = pattern.finditer(input_string)
     for match in matches:
         token = Token()
