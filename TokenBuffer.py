@@ -8,6 +8,7 @@ class TokenBuffer:
         self.line = 0
         self.file_list = []
         self.file_index = 0
+        self.file_line = 1
         self.lines: List[List[str]] = []
         self.configuration = {
             'skip_white_space': False,
@@ -45,7 +46,7 @@ class TokenBuffer:
             self.tokens[-1][-1].type = 'EOF'
 
     def get_position(self):
-        return None if self.out_of_tokens() else self.file_list[self.file_index], self.line + 1, self.column
+        return None if self.out_of_tokens() else self.file_list[self.file_index], self.file_line, self.column
 
     # def peek(self):
     #     while True:
@@ -83,10 +84,13 @@ class TokenBuffer:
     def consume(self):
         if self.expect_type('EOF'):
             self.file_index += 1
+            self.file_line = 1
             self.consume_line()
             return
         if self.out_of_tokens():
             return
+        if self.expect_type('EOL'):
+            self.file_line += 1
         self.column += 1
         if self.column >= len(self.tokens[self.line]):
             self.consume_line()
