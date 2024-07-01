@@ -11,7 +11,8 @@ class TokenBuffer:
         self.lines: List[List[str]] = []
         self.configuration = {
             'skip_white_space': False,
-            'skip_EOF': True
+            'skip_EOF': True,
+            'skip_EOL': True
         }
 
     def init_patterns(self, patterns: Dict):
@@ -38,6 +39,8 @@ class TokenBuffer:
         for file in self.lines:
             for line in file:
                 self.tokens.append(tokenize(line, self.re_pattern))
+                self.self.tokens[-1].append(Token())
+                self.tokens[-1][-1].type = 'EOL'
             self.tokens[-1].append(Token())
             self.tokens[-1][-1].type = 'EOF'
 
@@ -59,7 +62,8 @@ class TokenBuffer:
             conf = self.configuration
             return (
                 (conf['skip_white_space'] and self.expect_type('WHITE_SPACE'))
-                or (conf['skip_EOF'] and self.expect_type('EOF'))
+                    or (conf['skip_EOF'] and self.expect_type('EOF')
+                    or (conf['skip_EOL']) and self.expect_type('EOL'))
             )
         
         while not self.out_of_tokens() and skip_next():
