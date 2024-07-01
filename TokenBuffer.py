@@ -30,6 +30,10 @@ class TokenBuffer:
                 lines = source.readlines()
                 self.lines.append(lines)
 
+    def add_lines(self, file_name, lines):
+        self.file_list.append(file_name)
+        self.lines.append(lines)
+        
     def config(self, **flags):
         self.configuration.update(flags)
 
