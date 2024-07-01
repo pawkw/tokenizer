@@ -39,7 +39,7 @@ class TokenBuffer:
         for file in self.lines:
             for line in file:
                 self.tokens.append(tokenize(line, self.re_pattern))
-                self.self.tokens[-1].append(Token())
+                self.tokens[-1].append(Token())
                 self.tokens[-1][-1].type = 'EOL'
             self.tokens[-1].append(Token())
             self.tokens[-1][-1].type = 'EOF'
